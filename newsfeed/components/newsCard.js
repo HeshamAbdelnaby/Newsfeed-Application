@@ -32,18 +32,19 @@ const styles=StyleSheet.create({
         },
         backgroundColor: '#fff',
         elevation:16,
-        marginTop: 20,
+        marginTop: 40,
     },
     image:{
         height:200,
         width:'100%',
-        borderTopLeftRadius:40,
-        borderTopRightRadius: 40,
+        borderTopLeftRadius:20,
+        borderTopRightRadius: 20,
     },
     title:{
         fontSize:18,
         fontWeight:"600",
         marginTop:10,
         paddingHorizontal: 10,
+        paddingBottom: 10,
     }
 })

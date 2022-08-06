@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {View, Text, StyleSheet, SafeAreaView} from 'react-native';
+import {View, Text, StyleSheet, SafeAreaView, ScrollView} from 'react-native';
 import NewsCard from '../components/newsCard';
 
 class HomeScreen extends Component {
