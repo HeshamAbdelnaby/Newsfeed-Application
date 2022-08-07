@@ -1,18 +1,22 @@
 import React, { Component } from 'react';
-import {View, Text, StyleSheet, SafeAreaView, Image} from 'react-native';
+import {View, Text, StyleSheet, SafeAreaView, Image, Pressable, TouchableOpacity} from 'react-native';
 
 class NewsCard extends Component {
   render() {
     return (
-      <SafeAreaView style={styles.container}>
-        <Image source={{
-            uri:"https://media.wired.com/photos/62d866d1ddaaa99a1df8e62f/191:100/w_1280,c_limit/Google-Pixel-6A-Review-Gear.jpg"
-        }}
-        style={styles.image} 
-        />
-
-        <Text style={styles.title}>13 Great Deals on Smartphones, Laptops, and Smart Speakers</Text>
-      </SafeAreaView>
+        <TouchableOpacity
+            style={styles.container}
+            onPress={this.props.onSelect}
+        >
+            <View>
+                <Image source={{
+                    uri: this.props.image,
+                }}
+                style={styles.image} 
+                />
+                <Text style={styles.title}>{this.props.title}</Text>
+            </View>
+        </TouchableOpacity>
     );
   }
 }
@@ -32,7 +36,7 @@ const styles=StyleSheet.create({
         },
         backgroundColor: '#fff',
         elevation:16,
-        marginTop: 40,
+        marginBottom: 20,
     },
     image:{
         height:200,
