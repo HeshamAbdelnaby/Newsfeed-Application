@@ -9,15 +9,29 @@ class NewsDetailsScreen extends Component {
 
     render() {
       return (
-        <View style={styles.container}>
-            <Image source={{
-                    uri: this.selectedNews.image,
-                }}
-                style={styles.image} 
+        <ScrollView>
+            <View style={styles.container}>
+                <Image source={{
+                        uri: this.selectedNews.image,
+                    }}
+                    style={styles.image} 
                 />
-            <Text>{this.selectedNews.title}</Text>
-            <Text>{this.selectedNews.description}</Text>
-        </View>
+                <View style={styles.titleContainer}>
+                    <Text style={styles.title}>{this.selectedNews.title}</Text>
+                </View>
+                <View style={styles.descriptionContainer}>
+                    <Text>{this.selectedNews.description}</Text>
+                </View>
+                <View style={styles.infoContainer}>
+                    <View style={styles.categoryContainer}>
+                        <Text style={{alignSelf:'center'}}>{new Date(this.selectedNews.published_at).toDateString()}</Text>
+                    </View>
+                    <View style={styles.categoryContainer}>
+                        <Text style={{alignSelf:'center'}}>{this.selectedNews.category}</Text>
+                    </View>
+                </View>
+            </View>
+        </ScrollView>
       );
     }
   }
@@ -33,15 +47,43 @@ class NewsDetailsScreen extends Component {
 
   const styles = StyleSheet.create({
     container: {
-        marginTop: 10,
+        // marginTop: 10,
         alignContent:'center'
     },
     image:{
         alignSelf:'center',
         height:300,
-        width:'95%',
+        width:'100%',
         // borderTopLeftRadius:20,
         // borderTopRightRadius: 20,
-        borderRadius:20
+        // borderRadius:20
+    },
+    title:{
+        fontSize:18,
+        fontWeight:"600",
+        marginTop:10,
+        paddingHorizontal: 10,
+        paddingBottom: 10,
+    },
+    titleContainer:{
+        borderLeftColor: Colors.primaryColor,
+        borderLeftWidth: 3,
+        marginHorizontal: 15,
+        marginTop: 10,
+    },
+    descriptionContainer:{
+        marginHorizontal: 15,
+        marginTop: 20,
+    },
+    categoryContainer:{
+        backgroundColor:Colors.primaryColor,
+        marginHorizontal: 15,
+        marginTop: 10,
+        padding: 10,
+        borderRadius: 20,
+        flex:1,
+    },
+    infoContainer:{
+        flexDirection:'row',
     }
   })
