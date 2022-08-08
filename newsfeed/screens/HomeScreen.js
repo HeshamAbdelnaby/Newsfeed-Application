@@ -28,6 +28,7 @@ const HomeScreen = (props) => {
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
+        setSearch('');
         setFilteredNews(NEWS);
         wait(2000).then(() => setRefreshing(false));
     }, []);
@@ -75,7 +76,14 @@ const HomeScreen = (props) => {
                         />
                     }
                 /> : 
-                <ScrollView style={styles.nothingFoundContainer}>
+                <ScrollView
+                style={styles.nothingFoundContainer}
+                refreshControl={
+                    <RefreshControl
+                      refreshing={refreshing}
+                      onRefresh={onRefresh}
+                    />
+                }>
                     <Text style={styles.nothingFoundText}>No News Found!</Text>
                     <View>
                         <Image
