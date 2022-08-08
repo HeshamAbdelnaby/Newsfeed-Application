@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {View, Text, StyleSheet, SafeAreaView, ScrollView, FlatList, TextInput} from 'react-native';
+import {View, Text, StyleSheet, SafeAreaView, ScrollView, FlatList, TextInput, RefreshControl, Image} from 'react-native';
 import NewsCard from '../components/newsCard';
 import Colors from '../constants/Colors';
 
@@ -20,6 +20,17 @@ const HomeScreen = (props) => {
     const [search, setSearch] = useState('');
     const [news, setNews] = useState(NEWS);
     const [filteredNews, setFilteredNews] = useState(NEWS);
+    const [refreshing, setRefreshing] = React.useState(false);
+
+    const wait = (timeout) => {
+        return new Promise(resolve => setTimeout(resolve, timeout));
+      }
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        setFilteredNews(NEWS);
+        wait(2000).then(() => setRefreshing(false));
+    }, []);
 
     const searchFunction = (text) => {
         if(text){
@@ -50,13 +61,29 @@ const HomeScreen = (props) => {
                         searchFunction(text)}
                     }
                 }/>             
-            <FlatList
-                style={styles.list}
-                data={filteredNews}
-                renderItem={this.renderNewsItem}
-                numColumns={1}
-                keyExtractor={(item, index) => item.url}
-            />
+            {filteredNews.length != 0 ? 
+                <FlatList
+                    style={styles.list}
+                    data={filteredNews}
+                    renderItem={this.renderNewsItem}
+                    numColumns={1}
+                    keyExtractor={(item, index) => item.url}
+                    refreshControl={
+                        <RefreshControl
+                          refreshing={refreshing}
+                          onRefresh={onRefresh}
+                        />
+                    }
+                /> : 
+                <ScrollView style={styles.nothingFoundContainer}>
+                    <Text style={styles.nothingFoundText}>No News Found!</Text>
+                    <View>
+                        <Image
+                            source={require('../assets/your-file-is-corrupt-broken-concept-illustration-flat-design-eps10-graphic-element-for-app-or-website-ui-ux-vector.jpg')}
+                            style={styles.image}/>
+                    </View>
+                </ScrollView>
+            }
         </SafeAreaView>
       );
     }
@@ -73,6 +100,7 @@ const HomeScreen = (props) => {
   const styles = StyleSheet.create({
     container: {
         marginTop: 10,
+        backgroundColor: '#FFFFFF'
     },
     list:{
         marginTop: 10,
@@ -86,4 +114,14 @@ const HomeScreen = (props) => {
         borderRadius:10,
         textAlign: 'center'
     },
+    image:{
+        height:500,
+        width:'100%',
+    },
+    nothingFoundText:{
+        alignSelf:'center',
+    },
+    nothingFoundContainer:{
+        marginTop: 30,
+    }
   });
