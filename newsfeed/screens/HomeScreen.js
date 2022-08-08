@@ -1,9 +1,20 @@
 import React, { useState } from 'react';
-import {View, Text, StyleSheet, SafeAreaView, ScrollView, FlatList, TextInput, RefreshControl, Image} from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+    View,
+    Text,
+    StyleSheet,
+    SafeAreaView,
+    ScrollView,
+    FlatList,
+    TextInput,
+    RefreshControl,
+    Image
+} from 'react-native';
 import NewsCard from '../components/newsCard';
 import Colors from '../constants/Colors';
-
-import { NEWS } from '../data/dummy-data';
+import { searchNews } from '../store/actions/news'
+import { useEffect } from 'react';
 
 
 
@@ -17,9 +28,12 @@ const HomeScreen = (props) => {
     }}/>;
     }
 
+    const availableNews = useSelector(state => state.news.filteredNews);
+
+    const dispatch = useDispatch();
+
     const [search, setSearch] = useState('');
-    const [news, setNews] = useState(NEWS);
-    const [filteredNews, setFilteredNews] = useState(NEWS);
+    const [filteredNews, setFilteredNews] = useState(availableNews);
     const [refreshing, setRefreshing] = React.useState(false);
 
     const wait = (timeout) => {
@@ -29,23 +43,17 @@ const HomeScreen = (props) => {
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
         setSearch('');
-        setFilteredNews(NEWS);
+        setFilteredNews(availableNews);
         wait(2000).then(() => setRefreshing(false));
     }, []);
 
+    useEffect(() => {
+        dispatch(searchNews(search));
+        console.log('availableNews: ' + availableNews);
+    },[search]);
+
     const searchFunction = (text) => {
-        if(text){
-            const newData = news.filter((item) => {
-                if(item.title.indexOf(text) > -1){
-                    return item;
-                }
-            });
-            setFilteredNews(newData);
-            setSearch(text);
-        } else {
-            setFilteredNews(NEWS);
-            setSearch(text);
-        }
+        setSearch(text);
     }
 
       return (
@@ -65,7 +73,7 @@ const HomeScreen = (props) => {
             {filteredNews.length != 0 ? 
                 <FlatList
                     style={styles.list}
-                    data={filteredNews}
+                    data={availableNews}
                     renderItem={this.renderNewsItem}
                     numColumns={1}
                     keyExtractor={(item, index) => item.url}
