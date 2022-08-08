@@ -54,9 +54,6 @@ class NewsDetailsScreen extends Component {
         alignSelf:'center',
         height:300,
         width:'100%',
-        // borderTopLeftRadius:20,
-        // borderTopRightRadius: 20,
-        // borderRadius:20
     },
     title:{
         fontSize:18,
