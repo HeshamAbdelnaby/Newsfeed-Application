@@ -120,6 +120,7 @@ const HomeScreen = (props) => {
         backgroundColor: Colors.primaryColor,
     },
     headerTintColor: 'white',
+    headerTitle: 'Home'
   }
   
   export default HomeScreen;

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, Image } from 'react-native';
 import Colors from '../constants/Colors';
 import { useSelector } from 'react-redux';
