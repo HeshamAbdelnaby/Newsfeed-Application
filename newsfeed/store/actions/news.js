@@ -1,14 +1,10 @@
 import NewsModel from '../../models/newsModel';
-import {} from 'redux-thunk';
-import { Dispatch } from 'react';
-import { DispatchProp } from 'react-redux';
-import { AnyAction } from 'redux';
 
 export const SEARCH_NEWS = 'SEARCH_NEWS';
 export const SET_NEWS = 'SET_NEWS';
 
-export const fetchNews = (lang: string) => {
-    return async (dispatch: Dispatch<AnyAction>) => {
+export const fetchNews = (lang) => {
+    return async dispatch => {
         const response = await fetch(
             'http://api.mediastack.com/v1/news?access_key=83fb9b305a5b03fa3c826759ba59cf19&sources=' + lang
         );
@@ -36,6 +32,6 @@ export const fetchNews = (lang: string) => {
     }
 }
 
-export const searchNews = (title: string) => {
+export const searchNews = (title) => {
     return { type: SEARCH_NEWS, newsTitle: title };
 }

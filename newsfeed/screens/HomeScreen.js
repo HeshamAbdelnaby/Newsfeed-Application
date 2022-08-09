@@ -15,16 +15,23 @@ import {
 import NewsCard from '../components/newsCard';
 import Colors from '../constants/Colors';
 import { searchNews, fetchNews } from '../store/actions/news';
+import { NavigationActions } from 'react-navigation';
 
 
 
-const HomeScreen = (props) => {
+const HomeScreen = ({ navigation }) => {
     renderNewsItem = (itemData) => {
         return <NewsCard title={itemData.item.title} image={itemData.item.image} onSelect={() => {
-            props.navigation.navigate({routeName: 'News', params:{
-                title:  itemData.item.title,
-            }
-        })
+            navigation.navigate('News',{title:  itemData.item.title,});
+            // props.navigation.navigate({routeName: 'News', params:{
+            //     title:  itemData.item.title,
+            // }
+            // })
+            // props.navigation.dispatch(
+            //     NavigationActions.navigate({ routeName: "News", params:{
+            //             title:  itemData.item.title,
+            //         } })
+            //    );
     }}/>;
     }
 
@@ -115,13 +122,14 @@ const HomeScreen = (props) => {
       )};
     }
 
-  HomeScreen.navigationOptions = {
-    headerStyle: {
-        backgroundColor: Colors.primaryColor,
-    },
-    headerTintColor: 'white',
-    headerTitle: 'Home'
-  }
+//   HomeScreen.navigationOptions = {
+//     headerStyle: {
+//         backgroundColor: Colors.primaryColor,
+//     },
+//     headerTintColor: 'white',
+//     headerTitle: 'Home',
+//     headerRight:<Text>Test</Text>
+//   }
   
   export default HomeScreen;
 

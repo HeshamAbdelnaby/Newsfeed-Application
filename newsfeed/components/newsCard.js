@@ -1,36 +1,27 @@
 import React, { Component } from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, SafeAreaView, Image, Pressable, TouchableOpacity} from 'react-native';
 
-export type Props = {
-    onSelect: Function;
-    image: string;
-    title: string;
-}
-
-const NewsCard: React.FC<Props> = ({
-    onSelect,
-    image,
-    title
-}) => {
-    const onPress = () => {
-        onSelect();
-    }
+class NewsCard extends Component {
+  render() {
     return (
         <TouchableOpacity
             style={styles.container}
-            onPress={onPress}
+            onPress={this.props.onSelect}
         >
             <View>
                 <Image source={{
-                    uri: image,
+                    uri: this.props.image,
                 }}
                 style={styles.image} 
                 />
-                <Text style={styles.title}>{title}</Text>
+                <Text style={styles.title}>{this.props.title}</Text>
             </View>
         </TouchableOpacity>
     );
-};
+  }
+}
+
+export default NewsCard;
 
 const styles=StyleSheet.create({
     container:{
@@ -60,6 +51,4 @@ const styles=StyleSheet.create({
         paddingHorizontal: 10,
         paddingBottom: 10,
     }
-});
-
-export default NewsCard;
+})

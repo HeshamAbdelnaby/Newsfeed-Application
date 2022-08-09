@@ -3,9 +3,10 @@ import { View, Text, StyleSheet, SafeAreaView, ScrollView, Image } from 'react-n
 import Colors from '../constants/Colors';
 import { useSelector } from 'react-redux';
 
-const NewsDetailsScreen = (props) => {
+const NewsDetailsScreen = ({ route, navigation }) => {
+    const { title } = route.params;
     const availableNews = useSelector(state => state.news.news);
-    const newsTitle = props.navigation.getParam('title');
+    const newsTitle = title;
     const selectedNews = availableNews.find(news => news.title == newsTitle);
     return (
         <ScrollView>
