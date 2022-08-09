@@ -1,13 +1,19 @@
 import {NEWS} from '../../data/dummy-data';
-import { SEARCH_NEWS } from '../actions/news';
+import { SEARCH_NEWS, SET_NEWS } from '../actions/news';
 
 const initialState = {
-    news: NEWS,
-    filteredNews: NEWS,
+    news: [],
+    filteredNews: [],
 }
 
 const newsReducer = (state = initialState, action) => {
     switch(action.type) {
+        case SET_NEWS:
+            console.log(action.news);
+            return {
+                news: action.news,
+                filteredNews: action.news
+            };
         case SEARCH_NEWS:
             // if(action.newsTitle){
                 const newNews = state.news.filter((item) => {
@@ -16,11 +22,9 @@ const newsReducer = (state = initialState, action) => {
                     }
                 });
                 if(newNews.length != 0){
-                    console.log('filteredNews: ' + newNews);
                 return {...state, filteredNews: newNews};
                 }
               else {
-                console.log('filteredNews: ' + newNews);
                 return {...state, filteredNews: newNews};
             }
         // }

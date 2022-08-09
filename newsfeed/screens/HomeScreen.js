@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
     View,
@@ -9,12 +9,12 @@ import {
     FlatList,
     TextInput,
     RefreshControl,
-    Image
+    Image,
+    ActivityIndicator
 } from 'react-native';
 import NewsCard from '../components/newsCard';
 import Colors from '../constants/Colors';
-import { searchNews } from '../store/actions/news'
-import { useEffect } from 'react';
+import { searchNews, fetchNews } from '../store/actions/news';
 
 
 
@@ -33,29 +33,40 @@ const HomeScreen = (props) => {
     const dispatch = useDispatch();
 
     const [search, setSearch] = useState('');
-    const [filteredNews, setFilteredNews] = useState(availableNews);
     const [refreshing, setRefreshing] = React.useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const wait = (timeout) => {
-        return new Promise(resolve => setTimeout(resolve, timeout));
-      }
-
-    const onRefresh = React.useCallback(() => {
+    const onRefresh = async () => {
         setRefreshing(true);
         setSearch('');
-        setFilteredNews(availableNews);
-        wait(2000).then(() => setRefreshing(false));
-    }, []);
+        await dispatch(fetchNews('en'));
+        setRefreshing(false)
+    }
 
     useEffect(() => {
         dispatch(searchNews(search));
-        console.log('availableNews: ' + availableNews);
     },[search]);
+
+    const loadNews = async () => {
+        setSearch('');
+        setIsLoading(true);
+        await dispatch(fetchNews('en'));
+        setIsLoading(false);
+    }
+
+    useEffect(() => {
+        loadNews();
+    }, [dispatch]);
 
     const searchFunction = (text) => {
         setSearch(text);
     }
 
+    if(isLoading){
+        return <View style={styles.loaderContainer}>
+            <ActivityIndicator size='large' color={Colors.primaryColor} />
+        </View>
+    } else{
       return (
         <SafeAreaView style={styles.container}>
             <TextInput
@@ -70,7 +81,7 @@ const HomeScreen = (props) => {
                         searchFunction(text)}
                     }
                 }/>             
-            {filteredNews.length != 0 ? 
+            {availableNews.length != 0 ? 
                 <FlatList
                     style={styles.list}
                     data={availableNews}
@@ -101,7 +112,7 @@ const HomeScreen = (props) => {
                 </ScrollView>
             }
         </SafeAreaView>
-      );
+      )};
     }
 
   HomeScreen.navigationOptions = {
@@ -116,7 +127,8 @@ const HomeScreen = (props) => {
   const styles = StyleSheet.create({
     container: {
         marginTop: 10,
-        backgroundColor: '#FFFFFF'
+        backgroundColor: '#FFFFFF',
+        paddingBottom: 30
     },
     list:{
         marginTop: 10,
@@ -139,5 +151,10 @@ const HomeScreen = (props) => {
     },
     nothingFoundContainer:{
         marginTop: 30,
+    },
+    loaderContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
     }
   });

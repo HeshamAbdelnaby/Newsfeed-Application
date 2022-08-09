@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, Image } from 'react-native';
 import Colors from '../constants/Colors';
 import { useSelector } from 'react-redux';
-import { NEWS } from '../data/dummy-data';
 
 const NewsDetailsScreen = (props) => {
     const availableNews = useSelector(state => state.news.news);
