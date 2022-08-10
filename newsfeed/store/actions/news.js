@@ -1,9 +1,12 @@
 import NewsModel from '../../models/newsModel';
+import { View, Text, AsyncStorage  } from 'react-native';
 
 export const SEARCH_NEWS = 'SEARCH_NEWS';
 export const SET_NEWS = 'SET_NEWS';
+export const SET_DARK = 'SET_DARK';
 
 export const fetchNews = (lang) => {
+    
     return async dispatch => {
         const response = await fetch(
             'http://api.mediastack.com/v1/news?access_key=83fb9b305a5b03fa3c826759ba59cf19&sources=' + lang
@@ -34,4 +37,8 @@ export const fetchNews = (lang) => {
 
 export const searchNews = (title) => {
     return { type: SEARCH_NEWS, newsTitle: title };
+}
+
+export const setDark = () => {
+    return { type: SET_DARK };
 }

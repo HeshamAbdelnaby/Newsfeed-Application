@@ -16,69 +16,91 @@ import NewsCard from '../components/newsCard';
 import Colors from '../constants/Colors';
 import { searchNews, fetchNews } from '../store/actions/news';
 import { NavigationActions } from 'react-navigation';
+import { AsyncStorage } from 'react-native';
 
 
 
 const HomeScreen = ({ navigation }) => {
     renderNewsItem = (itemData) => {
-        return <NewsCard title={itemData.item.title} image={itemData.item.image} onSelect={() => {
+        return <NewsCard title={itemData.item.title} image={itemData.item.image} darkMode={darkTheme} onSelect={() => {
             navigation.navigate('News',{title:  itemData.item.title,});
-            // props.navigation.navigate({routeName: 'News', params:{
-            //     title:  itemData.item.title,
-            // }
-            // })
-            // props.navigation.dispatch(
-            //     NavigationActions.navigate({ routeName: "News", params:{
-            //             title:  itemData.item.title,
-            //         } })
-            //    );
     }}/>;
     }
 
     const availableNews = useSelector(state => state.news.filteredNews);
+    const themeMode = useSelector(state => state.news.darkMode);
 
     const dispatch = useDispatch();
 
     const [search, setSearch] = useState('');
-    const [refreshing, setRefreshing] = React.useState(false);
+    const [refreshing, setRefreshing] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [language, setLanguage] = useState('en');
+    const [darkTheme, setDarkTheme] = useState(false);
+
+    // useEffect(() => {
+    //     setDarkTheme(themeMode);
+    // });
+
+    const _retrieveData = async () => {
+        try {
+          const value = await AsyncStorage.getItem('Language');
+          const theme = await AsyncStorage.getItem('ThemeMode');
+          if (value !== null) {
+            // We have data!!
+            console.log('value: ' + value);
+            console.log('theme: ' + theme);
+            setLanguage(value);
+            setDarkTheme(theme);
+            return value;
+          }
+        } catch (error) {
+          // Error retrieving data
+          setLanguage('en');
+          setDarkTheme(false);
+        }
+      };
 
     const onRefresh = async () => {
+        _retrieveData();
         setRefreshing(true);
         setSearch('');
-        await dispatch(fetchNews('en'));
+        await dispatch(fetchNews(language));
         setRefreshing(false)
     }
 
     useEffect(() => {
         dispatch(searchNews(search));
-    },[search]);
+    },[search,language]);
 
     const loadNews = async () => {
+        _retrieveData();
         setSearch('');
         setIsLoading(true);
-        await dispatch(fetchNews('en'));
+        await dispatch(fetchNews(language));
         setIsLoading(false);
     }
 
     useEffect(() => {
         loadNews();
-    }, [dispatch]);
+    }, [dispatch,language]);
 
     const searchFunction = (text) => {
         setSearch(text);
     }
 
     if(isLoading){
-        return <View style={styles.loaderContainer}>
-            <ActivityIndicator size='large' color={Colors.primaryColor} />
-        </View>
+        return (
+            <View style={styles.loaderContainer}>
+                <ActivityIndicator size='large' color={Colors.primaryColor} />
+            </View>
+        )
     } else{
       return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={darkTheme == 'active' ? styles.conatinerDarkMode : styles.container}>
             <TextInput
-                style={styles.textInputContainer}
-                placeholder="Search"
+                style={darkTheme ? styles.textInputContainerDarkMode : styles.textInputContainer}
+                placeholder= {language == 'en' ? "Search" : "Búsqueda"}
                 inlineImageLeft='search_icon'
                 value={search}
                 onChangeText={(text)=>{
@@ -92,7 +114,7 @@ const HomeScreen = ({ navigation }) => {
                 <FlatList
                     style={styles.list}
                     data={availableNews}
-                    renderItem={this.renderNewsItem}
+                    renderItem={renderNewsItem}
                     numColumns={1}
                     keyExtractor={(item, index) => item.url}
                     refreshControl={
@@ -121,22 +143,18 @@ const HomeScreen = ({ navigation }) => {
         </SafeAreaView>
       )};
     }
-
-//   HomeScreen.navigationOptions = {
-//     headerStyle: {
-//         backgroundColor: Colors.primaryColor,
-//     },
-//     headerTintColor: 'white',
-//     headerTitle: 'Home',
-//     headerRight:<Text>Test</Text>
-//   }
   
   export default HomeScreen;
 
   const styles = StyleSheet.create({
     container: {
         marginTop: 10,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: 'white',
+        paddingBottom: 30
+    },
+    conatinerDarkMode: {
+        marginTop: 10,
+        backgroundColor: 'black',
         paddingBottom: 30
     },
     list:{
@@ -150,6 +168,16 @@ const HomeScreen = ({ navigation }) => {
         alignSelf:'center',
         borderRadius:10,
         textAlign: 'center'
+    },
+    textInputContainerDarkMode:{
+        width:"70%",
+        borderColor: 'black',
+        marginHorizontal: "30%",
+        borderWidth:2,
+        alignSelf:'center',
+        borderRadius:10,
+        textAlign: 'center',
+        backgroundColor: 'white'
     },
     image:{
         height:500,

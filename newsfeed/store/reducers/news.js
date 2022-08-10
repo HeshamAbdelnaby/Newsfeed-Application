@@ -1,14 +1,14 @@
-import { SEARCH_NEWS, SET_NEWS } from '../actions/news';
+import { SEARCH_NEWS, SET_DARK, SET_NEWS } from '../actions/news';
 
 const initialState = {
     news: [],
     filteredNews: [],
+    darkMode: false,
 }
 
 const newsReducer = (state = initialState, action) => {
     switch(action.type) {
         case SET_NEWS:
-            console.log(action.news);
             return {
                 news: action.news,
                 filteredNews: action.news
@@ -25,6 +25,10 @@ const newsReducer = (state = initialState, action) => {
             else {
                 return {...state, filteredNews: newNews};
             }
+        case SET_DARK:
+            const mode = state.darkMode
+            console.log(mode);
+            return { ...state, darkMode: !mode}
         default:
             return state;
     }
